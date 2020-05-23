@@ -22,6 +22,19 @@ def getString( length, allowedChars ):
         s.append( allowedChars[ randint( 0, lastIndex) ] )
     return s
 
+def addEdgeToGraph(E, edgesSeen, u, v, isDirected, weight = None):
+    if weight is None:
+        E.append( (u, v) )
+    else:
+        E.append( (u, v, weight) )
+    edgesSeen[u].add(v)
+    if not isDirected:
+        if w is None:
+            E.append( (v, u) )
+        else:
+            E.append( (v, u, weight) )
+        edgesSeen[v].add(u)
+
 # Generates 1-indexed graph based on given parameters
 def getGraph( vertexLowerBound, vertexUpperBound,
               edgesLowerBound, edgesUpperBound,
@@ -37,10 +50,20 @@ def getGraph( vertexLowerBound, vertexUpperBound,
     edgesSeen = [ set() for i in range(n+1) ]
 
     if isConnected:
+        # isDirected == False is implied here, as directed graphs
+        # have no notion of connectedness apart from being strongly connected.
         vertexList = [i for i in range(1, n + 1)]
         shuffle(vertexList)
         for i in range(1, n+1):
-            E.append( ( vertexList[i - 1], vertexList[i] ) )
+            u = vertexList[i-1]
+            v = vertexList[i]
+
+            if isWeighted:
+                w = getRandomInteger(weightsLowerBound, weightsUpperBound)
+                addEdgeToGraph(E, edgesSeen, u, v, isDirected, weight = w)
+            else:
+                addEdgeToGraph(E, edgesSeen, u, v, isDirected)
+
         m -= n - 1
 
     while m > 0:
@@ -54,17 +77,9 @@ def getGraph( vertexLowerBound, vertexUpperBound,
 
         if isWeighted:
             w = getRandomInteger(weightsLowerBound, weightsUpperBound)
-            E.append( (u, v, w) )
-            edgesSeen[u].add(v)
-            if not isDirected:
-                E.append( (v, u, w) )
-                edgesSeen[v].add(u)
+            addEdgeToGraph(E, edgesSeen, u, v, isDirected, weight = w)
         else:
-            E.append( (u, v) )
-            edgesSeen[u].add(v)
-            if not isDirected:
-                E.append( (v, u) )
-                edgesSeen[v].add(u)
+            addEdgeToGraph(E, edgesSeen, u, v, isDirected)
 
         if isDAG:
             visited = [ False for i in range(n+1) ]
