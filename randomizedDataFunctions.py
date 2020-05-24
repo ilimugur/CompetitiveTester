@@ -1,4 +1,4 @@
-from random import randint, shuffle
+from random import randint, uniform, shuffle
 
 def dfs( u, adjList, visited ):
     hasCycle = False
@@ -14,6 +14,9 @@ def dfs( u, adjList, visited ):
 # Returns a random integer in the inclusive range
 def getRandomInteger( lowerBound, upperBound ):
     return randint(lowerBound, upperBound)
+
+def getRandomFloat( lowerBound, upperBound ):
+    return uniform(lowerBound, upperBound)
 
 def getString( length, allowedChars ):
     s = ''
