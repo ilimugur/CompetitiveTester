@@ -18,11 +18,12 @@ def getRandomInteger( lowerBound, upperBound ):
 def getRandomFloat( lowerBound, upperBound ):
     return uniform(lowerBound, upperBound)
 
-def getString( length, allowedChars ):
+def getString( minLength, maxLength, allowedChars ):
+    length = getRandomInteger(minLength, maxLength)
     s = ''
-    lastIndex = length - 1
+    lastAllowedCharIndex = len(allowedChars) - 1
     for i in range(length):
-        s.append( allowedChars[ randint( 0, lastIndex) ] )
+        s += (allowedChars[ getRandomInteger(0, lastAllowedCharIndex) ])
     return s
 
 def addEdgeToGraph(E, edgesSeen, u, v, isDirected, weight = None):
@@ -103,3 +104,4 @@ def getGraph( vertexLowerBound, vertexUpperBound,
                 
     shuffle(E)
     return (n, E)
+
