@@ -21,15 +21,17 @@ To utilize this tool, you need 4 things. Namely;
 
 There is also an optional command line argument to limit the number of test cases to be generated. If no such limit is specified, the execution will continue as an infinite loop that only ends when a problematic test case is found. In that case, you can create a keyboard interrupt (e.g., <kbd>Ctrl</kbd> + <kbd>C</kbd>) to end the execution.
 
-### generateInput() function and:
+### generateInput():
 
 As each problem has a different input format, I didn't want to have fixed input generator functions. Instead, for each problem you need to test, you need to implement the `generateInput()` function in [main.py](main.py) so that it produces the input you desire. It seems like a lot of manual labor at an initial glance, but this module includes a few tools to make it easier for you, which are covered below.
 
 All this module expects you to do in terms of formatting is to use the functions available within the module to generate a valid test case, and format that test case based on your needs to finally return a list of lists `L`. Each `L[i]` represents a line of input, and each element within `L[i][j]` will be printed as such to the input file for that case, with a single space between them.
 
+The following is a sample implementation of `generateInput()`. It prints out the inputs required by [this](https://codeforces.com/problemset/problem/894/E) problem on [Codeforces](https://www.codeforces.com).
+
 ### randomizedDataFunctions.py:
 
-In [randomizedDataFunctions.py](randomizedDataFunctions.py), which is already imported into [main.py](main.py) as `dataGenerator`, there are methods to generate a random integer, string and a graph. The integer generation is a just a wrapper around random.randint. The string generator accepts a length and an list of allowed characters.
+In [randomizedDataFunctions.py](randomizedDataFunctions.py), which is already imported into [main.py](main.py) as `dataGenerator`, there are methods to generate a random integer, float, string and graph. The integer and float generation functions are just wrappers around `random.randint` and `random.uniform`, respectively. The string generator accepts a length and an list of allowed characters.
 
 The graph generation function returns accepts the lower and upper bounds on the number of vertices and edges. It also accepts a flag to indicate if the graph is weighted, and if so, the lower and upper bounds of edge weights. Apart from those, it accepts the following flags, which have self-explanatory names:
 
@@ -64,7 +66,7 @@ python main.py --help
 
 ### What's next?
 
-Extending the randomized data functions would be nice. Range query generation, floating point generation (with precision)  and certain tree structures are on the top of my list in that area. It can be extended even further if domains such as computation geometry are to be considered.
+Extending the randomized data functions would be nice. Range query generation and certain tree structures are on the top of my list in that area. It can be extended even further if domains such as computational geometry are to be considered.
 
 Some online judges are relatively tolerant of whitespace issues, and it would be nice to add some flexibility about that. Currently, even an extra newline character at the end of the output causes a mismatch.
 
