@@ -1,6 +1,6 @@
 # Competitive Tester
 
-This tiny command-line module helps a competitive programmer test their code against a working solution, using randomized blackbox tests withing the bounds provided by the user.
+This tiny command-line module helps a competitive programmer test their code against a working solution, using randomized blackbox tests withing the bounds provided by the user. It can also be used to generate any number of random test cases.
 
 ### Use Case
 
@@ -12,14 +12,18 @@ This tool can help with that particular challenge, especially in the context of 
 
 ### How to use it?
 
-To utilize this tool, you need 4 things. Namely;
+The tool has 2 modes.
 
-- Your own, problematic implementation
+If you wish to run your code against a working implementation and compare the outputs, you need 4 things. Namely;
+
+- Your own implementation
 - An implementation that is known to be correct
 - An existing directory with appropriate permissions so that the module can use it to store files
 - Overriding the `generateInput()` function in [main.py](main.py) so that it generates the particular input format you need
 
 There is also an optional command line argument to limit the number of test cases to be generated. If no such limit is specified, the execution will continue as an infinite loop that only ends when a problematic test case is found. In that case, you can create a keyboard interrupt (e.g., <kbd>Ctrl</kbd> + <kbd>C</kbd>) to end the execution.
+
+If you just wish to use this module to generate random test cases, you do not need to provide your own implementation or a correct implementation. Just implement `generateInput()` and alongside the test directory for the files, add the `--just-generate-tests` command line option. Unless `--num-tests` is specified with a particular value, it will generate a single test in the specified directory.
 
 ### generateInput():
 

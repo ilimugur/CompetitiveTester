@@ -1,6 +1,5 @@
 import testerFunctions
 import randomizedDataFunctions as dataGenerator
-import argparse
 
 # The implementation below generates output for the following problem:
 # https://codeforces.com/contest/894/problem/E
@@ -31,15 +30,4 @@ def generateInput():
     return [[]]
 
 if __name__ == "__main__":
-    desc = 'Test code against a correct solution with random cases.'
-    parser = argparse.ArgumentParser(description = desc)
-    parser.add_argument('--test-dir', metavar='T', type=str, required=True)
-    parser.add_argument('--num-tests-to-run', metavar='N', type=int)
-    parser.add_argument('--user-code', metavar='U', type=str, required=True)
-    parser.add_argument('--correct-code', metavar='C', type=str, required=True)
-    args = parser.parse_args()
-
-    numTestsToConduct = args.num_tests_to_run
-
-    testerFunctions.run(args.test_dir, numTestsToConduct,
-                        args.user_code, args.correct_code, generateInput)
+    testerFunctions.main(generateInput)

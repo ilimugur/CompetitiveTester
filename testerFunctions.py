@@ -1,5 +1,6 @@
-import subprocess
 import os
+import subprocess
+import argparse
 
 def initialize(userCodeFilePath, correctCodeFilePath,
                userExecutablePath, correctExecutablePath):
@@ -100,3 +101,35 @@ def run(testDirectory, numTestsToRun,
             exit(0)
         t += 1
 
+def generateTests(testDirectory, numTestsToRun, generateInput):
+    for i in range(1, numTestsToRun+1):
+        inputFileLocation = '%s/input-%d.txt' % (testDirectory, i)
+        inputStructure = generateInput()
+        printInputToFile(inputFileLocation, inputStructure)
+        print("Printed test case #%d to %s." % (i, inputFileLocation))
+
+def main(generateInput):
+    desc = 'Test code against a correct solution with random cases.'
+    parser = argparse.ArgumentParser(description = desc)
+    parser.add_argument('--test-dir', metavar='T', type=str, required=True)
+    parser.add_argument('--num-tests', metavar='N', type=int)
+    parser.add_argument('--user-code', metavar='U', type=str)
+    parser.add_argument('--correct-code', metavar='C', type=str)
+    parser.add_argument('--just-generate-tests', action='store_true')
+    args = parser.parse_args()
+
+    numTestsToConduct = args.num_tests
+
+    if args.just_generate_tests:
+        if numTestsToConduct == None:
+            numTestsToConduct = 1
+        generateTests(args.test_dir, numTestsToConduct, generateInput)
+    else:
+        if args.user_code is None:
+            print("Missing user's source code to be tested! Terminating...")
+            exit(0)
+        if args.correct_code is None:
+            print("Missing correct implementation to test user's code against! Terminating...")
+            exit(0)
+        run(args.test_dir, numTestsToConduct,
+            args.user_code, args.correct_code, generateInput)
