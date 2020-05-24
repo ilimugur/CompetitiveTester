@@ -80,7 +80,7 @@ In terms of the tool itself, it is a really quick and dirty implementation. It i
 
 Eventually, it would be nice to add support for other languages as well. Once the code quality is better, it would be relatively easy to separate the compilation logic and add support for various languages.
 
-If you have the time to dive into any of these issues, feel free to send me a pull request of whatever improvement you apply.
+Let me know if you notice another issue or some other missing functionality with this tool. Better yet, if you have the time to dive into any of the issues covered above or in the issues section, feel free to send me a pull request of whatever improvements you made. Because, at my current pace, I will most probably improve this module whenever I need a new functionality as part of my personal upsolving efforts.
 
 ### Sample generateInput() implementations
 
