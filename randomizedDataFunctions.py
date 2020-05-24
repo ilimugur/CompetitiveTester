@@ -44,6 +44,15 @@ def getGraph( vertexLowerBound, vertexUpperBound,
     n = getRandomInteger(vertexLowerBound, vertexUpperBound)
     if isConnected:
         edgesLowerBound = n - 1
+
+    if isSimpleGraph:
+        # In a simple graph there can be no more edges
+        # This is to prevent getting stuck in an infinite loop below
+        if isDirected:
+            vertexUpperBound = min(vertexUpperBound, n * (n - 1))
+        else:
+            vertexUpperBound = min(vertexUpperBound, n * (n - 1) / 2)
+
     m = getRandomInteger(edgesLowerBound, edgesUpperBound)
 
     E = []
