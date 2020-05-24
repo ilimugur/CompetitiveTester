@@ -27,41 +27,21 @@ As each problem has a different input format, I didn't want to have fixed input 
 
 All this module expects you to do in terms of formatting is to use the functions available within the module to generate a valid test case, and format that test case based on your needs to finally return a list of lists `L`. Each `L[i]` represents a line of input, and each element within `L[i][j]` will be printed as such to the input file for that case, with a single space between them.
 
-The following is a sample implementation of `generateInput()`. It prints out the inputs required by [this](https://codeforces.com/problemset/problem/894/E) problem on [Codeforces](https://www.codeforces.com).
-
-```
-def generateInput():
-    minN = 1
-    maxN = maxM = 1000000
-    minM = minW = 0
-    maxW = 100000000
-    n, E = dataGenerator.getGraph(minN, maxN, minM, maxM, True, minW, maxW,
-                                  isSimpleGraph = False, hasSelfLoops = True,
-                                  isDirected = True, isConnected = False,
-                                  isDAG = False)
-
-    m = len(E)
-    start = dataGenerator.getRandomInteger(1, n)
-
-    inputStructure = []
-    inputStructure.append( [ n, m ] )
-    inputStructure += E
-    inputStructure.append( [ start ] )
-
-    return inputStructure
-```
+The bottom of this README includes two implementations of `generateInput()` for actual contest problems.
 
 ### randomizedDataFunctions.py:
 
 In [randomizedDataFunctions.py](randomizedDataFunctions.py), which is already imported into [main.py](main.py) as `dataGenerator`, there are methods to generate a random integer, float, string and graph. The integer and float generation functions are just wrappers around `random.randint` and `random.uniform`, respectively. The string generator accepts a length and an list of allowed characters.
 
-The graph generation function returns accepts the lower and upper bounds on the number of vertices and edges. It also accepts a flag to indicate if the graph is weighted, and if so, the lower and upper bounds of edge weights. Apart from those, it accepts the following flags, which have self-explanatory names:
+Graph generation function accepts the lower and upper bounds on the number of vertices and edges as parameters. It also accepts a flag to indicate if the graph is weighted, and if so, the lower and upper bounds of edge weights. Apart from those, it accepts the following flags, which have self-explanatory names:
 
 - isSimpleGraph
 - hasSelfLoops
 - isDirected
 - isConnected
 - isDAG (Directed Acyclic Graph)
+
+Finally, range query generation function takes number of queries, minimum and maximum endpoints for the range to be queried, and finally, a `queriesInfo` nested list. In that list, `queriesInfo[i]` corresponds to the information needed to generate i<sup>th</sup> query type. `queriesInfo[i][j]` has an integer `1` or `2` as its first element, indicating whether the query is on a single element, or on a range of elements. Every other element in the `queriesInfo[i][j]` is a list, describing an extra parameter `v` needed by the query, which is to be generated randomly. More in depth information can be found above the definition of the function `getRangeQueries` in [randomizedDataFunctions.py](randomizedDataFunctions.py), but currently, the module can generate any number of extra parameter with types `str`, `int` and `float`.
 
 Remember that all the bounds in these implementations are inclusive, and all the indices generated as input data are 1-indexed.
 
@@ -88,7 +68,7 @@ python main.py --help
 
 ### What's next?
 
-Extending the randomized data functions would be nice. Range query generation and certain tree structures are on the top of my list in that area. It can be extended even further if domains such as computational geometry are to be considered.
+Extending the randomized data functions would be nice. Grid generation and certain tree structures are on the top of my list in that area. It can be extended even further if domains such as computational geometry are to be considered.
 
 Some online judges are relatively tolerant of whitespace issues, and it would be nice to add some flexibility about that. Currently, even an extra newline character at the end of the output causes a mismatch.
 
@@ -97,3 +77,62 @@ In terms of the tool itself, it is a really quick and dirty implementation. It i
 Eventually, it would be nice to add support for other languages as well. Once the code quality is better, it would be relatively easy to separate the compilation logic and add support for various languages.
 
 If you have the time to dive into any of these issues, feel free to send me a pull request of whatever improvement you apply.
+
+### Sample generateInput() implementations
+
+The following is a sample implementation of `generateInput()`. It prints out the inputs required by [this](https://codeforces.com/problemset/problem/894/E) problem on [Codeforces](https://www.codeforces.com).
+
+```
+def generateInput():
+    minN = 1
+    maxN = maxM = 1000000
+    minM = minW = 0
+    maxW = 100000000
+    n, E = dataGenerator.getGraph(minN, maxN, minM, maxM, True, minW, maxW,
+                                  isSimpleGraph = False, hasSelfLoops = True,
+                                  isDirected = True, isConnected = False,
+                                  isDAG = False)
+
+    m = len(E)
+    start = dataGenerator.getRandomInteger(1, n)
+
+    inputStructure = []
+    inputStructure.append( [ n, m ] )
+    inputStructure += E
+    inputStructure.append( [ start ] )
+
+    return inputStructure
+```
+
+The following `generateInput()` implementation is used to generate the input defined by [Candies, a problem from Round C of Kick Start 2020](https://codingcompetitions.withgoogle.com/kickstart/round/000000000019ff43/0000000000337b4d).
+
+```
+def generateInput():
+    inputStructure = []
+    T = dataGenerator.getRandomInteger(1, 100)
+    inputStructure.append([T])
+
+    numLargeCases = dataGenerator.getRandomInteger(1, 6)
+    for t in range(T):
+        if t < numLargeCases:
+            n = dataGenerator.getRandomInteger(1, 200000)
+            numQueries = dataGenerator.getRandomInteger(1, 100000)
+        else:
+            n = dataGenerator.getRandomInteger(1, 300)
+            numQueries = dataGenerator.getRandomInteger(1, 300)
+
+        inputStructure.append([n, numQueries])
+
+        a = []
+        for i in range(n):
+            a.append(dataGenerator.getRandomInteger(1, 100))
+        inputStructure.append(a)
+
+        queriesInfo = [ [1, [ int, 1, 100 ] ], [ 2 ] ]
+        queryIndicators = ['U', 'Q']
+        Q = dataGenerator.getRangeQueries(numQueries, queriesInfo, 1, n)
+        for query in Q:
+            query[0] = queryIndicators[ query[0] - 1 ]
+        inputStructure += Q
+    return inputStructure
+```
