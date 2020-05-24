@@ -18,7 +18,7 @@ def getRandomInteger( lowerBound, upperBound ):
 def getRandomFloat( lowerBound, upperBound ):
     return uniform(lowerBound, upperBound)
 
-def getString( minLength, maxLength, allowedChars ):
+def getRandomString( minLength, maxLength, allowedChars ):
     length = getRandomInteger(minLength, maxLength)
     s = ''
     lastAllowedCharIndex = len(allowedChars) - 1
@@ -105,3 +105,61 @@ def getGraph( vertexLowerBound, vertexUpperBound,
     shuffle(E)
     return (n, E)
 
+# queriesInfo is a nested list.
+# queriesInfo[i] is a list containing information needed to generate parameters
+# required for a query of type i.
+# queriesInfo[i][0] must be 1 or 2, indicating whether the query is relevant to
+# a single index or a range of indices, respectively. For all j > 0,
+# queriesInfo[i][j] is a list. Its first element must be one of the types
+# int, str or float.
+# The rest of queriesInfo[i][j] includes ordered information needed by the
+# module to generate a random value of that type.
+#
+# For int/float:
+#     queriesInfo[i][j] = [int/float, minVal, maxVal]
+# For str:
+#     queriesInfo[i][j] = [str, minLen, maxLen, allowedChars]
+#
+# Returns a list of lists Q. Q[i] is a list containing the ith query.
+# Q[i][0], Q[i][1] and Q[i][2] are the type, the left endpoint and
+# the right endpoint for the range query, respectively. Q[i][3:] contains the
+# randomly generated extra parameters for the query, in the order they were
+# given in queries list.
+
+def getRangeQueries(numQueries, queriesInfo,
+                    minRangeEndpointVal, maxRangeEndpointVal):
+    numQueryTypes = len(queriesInfo)
+    Q = []
+
+    for k in range(numQueries):
+        queryType = getRandomInteger(1, numQueryTypes)
+        queryTypeIndex = queryType - 1
+        numIdentifyingParams = queriesInfo[queryTypeIndex][0]
+
+        if numIdentifyingParams == 1:
+            elementID = getRandomInteger(minRangeEndpointVal, maxRangeEndpointVal)
+            query = [queryType, elementID]
+        elif numIdentifyingParams == 2:
+            minEndpoint = getRandomInteger(minRangeEndpointVal, maxRangeEndpointVal)
+            maxEndpoint = getRandomInteger(minEndpoint, maxRangeEndpointVal)
+            query = [queryType, minEndpoint, maxEndpoint]
+        else:
+            print("ERROR: Unsupported amount of identifying params requested.")
+
+        for extraParamInfo in queriesInfo[queryTypeIndex][1: ]:
+            # TODO: Check if extraParamInfo conforms to the expected format
+            paramType = extraParamInfo[0]
+            if paramType == str:
+                param = getRandomString(extraParamInfo[1], extraParamInfo[2],
+                                        extraParamInfo[3])
+            elif paramType == int:
+                param = getRandomInteger(extraParamInfo[1], extraParamInfo[2])
+            elif paramType == float:
+                param = getRandomFloat(extraParamInfo[1], extraParamInfo[2])
+            else:
+                print("ERROR: Unsupported query parameter type!")
+                exit(1)
+            query.append(param)
+        Q.append(query)
+
+    return Q
